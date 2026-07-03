@@ -1,0 +1,28 @@
+name: Keepalive
+
+# GitHub auto-disables scheduled workflows after 60 days with no repo
+# commits (running workflows doesn't count as activity). This job
+# commits a timestamp twice a month so the schedule never goes stale.
+
+on:
+  schedule:
+    - cron: "0 0 1,15 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - run: date -u +"%Y-%m-%dT%H:%M:%SZ" > LAST_ACTIVE.txt
+
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add LAST_ACTIVE.txt
+          git commit -m "chore: keepalive $(date -u +%Y-%m-%d)" || exit 0
+          git push
