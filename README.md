@@ -22,3 +22,6 @@ Edit `VIDEO_ID` (and `TITLE_TEMPLATE` if desired) in `update_title.py` and push.
 - Each run costs 51 YouTube API quota units (10,000/day free), so a 15-minute
   schedule uses ~4,900 units/day.
 - GitHub schedules are best-effort; runs may be delayed a few minutes.
+- The cron is offset to `4,19,34,49 * * * *` rather than `*/15` because GitHub
+  deprioritizes schedules that land exactly on the hour/quarter-hour, where
+  load is highest across all of GitHub Actions.
